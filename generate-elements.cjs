@@ -19,6 +19,12 @@ https.get('https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/ma
       else if (el.category.includes("actinide")) category = "Actinide";
       else if (el.category.includes("nonmetal")) category = "Nonmetal";
 
+      // Override categories by atomic number for groups the source JSON may mislabel
+      const halogens = new Set([9, 17, 35, 53, 85, 117]);
+      const postTransitionMetals = new Set([13, 31, 49, 50, 81, 82, 83, 113, 114, 115, 116]);
+      if (halogens.has(el.number)) category = "Halogen";
+      if (postTransitionMetals.has(el.number)) category = "Post-Transition Metal";
+
       // Calculate groups and periods accurately
       let group = el.group;
       let period = el.period;
