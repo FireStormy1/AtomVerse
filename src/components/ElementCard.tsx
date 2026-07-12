@@ -57,9 +57,9 @@ export const ElementCard = React.memo(({
   if (isHeatmap) {
     return (
       <div
-        className={`relative w-full h-full min-h-[64px] min-w-[52px] rounded-sm flex items-center justify-center cursor-pointer transition-colors duration-300 ${isFilteredOut ? 'opacity-10' : 'opacity-100'}`}
+        className={`relative w-full h-full min-h-[64px] min-w-[52px] rounded-sm flex items-center justify-center transition-colors duration-300 ${isFilteredOut ? 'opacity-0 pointer-events-none invisible' : 'opacity-100 cursor-pointer'}`}
         style={{ ...style, backgroundColor: heatmapColor }}
-        onClick={() => onClick(element)}
+        onClick={() => !isFilteredOut && onClick(element)}
         title={`${element.name}: ${heatmapColor}`}
       >
         <span className="text-black/80 font-bold text-lg">{element.symbol}</span>
@@ -70,15 +70,15 @@ export const ElementCard = React.memo(({
   return (
     <motion.div
       layoutId={layoutId}
-      className={`relative w-full h-full min-h-[70px] min-w-[58px] rounded-md glass transition-all duration-300 cursor-pointer overflow-hidden group ${categoryClass} ${isFilteredOut ? 'opacity-10 scale-95 grayscale' : 'opacity-100 hover:z-10'}`}
+      className={`relative w-full h-full min-h-[70px] min-w-[58px] rounded-md glass transition-all duration-300 overflow-hidden group ${categoryClass} ${isFilteredOut ? 'opacity-0 pointer-events-none invisible scale-95' : 'opacity-100 cursor-pointer hover:z-10'}`}
       style={style}
-      onClick={() => onClick(element)}
+      onClick={() => !isFilteredOut && onClick(element)}
       whileHover={!isFilteredOut ? { 
         scale: 1.15, 
         y: -5,
         zIndex: 50,
       } : {}}
-      animate={{ y: [idleY, -idleY, idleY] }}
+      animate={!isFilteredOut ? { y: [idleY, -idleY, idleY] } : {}}
       transition={{ 
         y: { repeat: Infinity, duration: 4 + (element.atomicNumber % 3), ease: "easeInOut" },
         scale: { type: 'spring', stiffness: 400, damping: 25 }
