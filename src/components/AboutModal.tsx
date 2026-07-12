@@ -106,9 +106,6 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
             <div className="p-8 space-y-8">
               <div className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed">
-                  Data Structures & Algorithms aren’t just interview prep for me — they’re how I reason about complexity, trade-offs, and elegant solutions. I apply that same discipline to projects that prioritize clean architecture, performance, and user experience.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
                   I enjoy building things that work beautifully in the real world, not just on paper. Every project is a chance to sharpen my craft and ship something meaningful.
                 </p>
               </div>
