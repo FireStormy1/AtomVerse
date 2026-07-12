@@ -5135,7 +5135,7 @@ const rawElements: ElementData[] = [
     "atomicRadius": 0,
     "ionizationEnergy": 0,
     "oxidationStates": "",
-    "yearDiscovered": -1,
+    "yearDiscovered": 2100,
     "discoverer": "GSI Helmholtz Centre for Heavy Ion Research",
     "namedAfter": "Unknown",
     "crystalStructure": "Unknown",
