@@ -16,6 +16,8 @@ import { useRecentHistory } from '../hooks/useRecentHistory';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { Sparkles, BarChart2, List, FlaskConical, Clock, BrainCircuit, User } from 'lucide-react';
 import { AboutModal } from '../components/AboutModal';
+import { MobilePinchZoom } from '../components/MobilePinchZoom';
+import { useIsMobile } from '../hooks/use-mobile';
 
 type ViewMode = 'table' | 'trends' | 'timeline';
 
@@ -42,6 +44,8 @@ export function Home() {
 
   const [favorites, toggleFavorite] = useFavorites();
   const [recent, addRecent] = useRecentHistory();
+  const isMobile = useIsMobile();
+  const pinchZoomEnabled = isMobile && viewMode !== 'timeline';
 
   // Handle Search input focusing
   useKeyboardShortcuts({
@@ -185,43 +189,44 @@ export function Home() {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 pt-24 pb-12 px-4 flex flex-col relative z-10">
-        
-        {/* Top controls section */}
-        {viewMode !== 'timeline' && (
-          <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
-            <div className="flex-1">
-              {viewMode === 'table' ? (
-                <FilterBar filters={filters} setFilters={setFilters} />
-              ) : (
-                <div className="mt-6 flex justify-center w-full">
-                  <TrendsView property={heatmapProperty} setProperty={setHeatmapProperty} />
-                </div>
-              )}
+      <main className={`flex-1 pt-24 pb-12 px-4 flex flex-col relative z-10 ${pinchZoomEnabled ? 'min-h-0 overflow-hidden' : ''}`}>
+        <MobilePinchZoom enabled={pinchZoomEnabled}>
+          {/* Top controls section */}
+          {viewMode !== 'timeline' && (
+            <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
+              <div className="flex-1">
+                {viewMode === 'table' ? (
+                  <FilterBar filters={filters} setFilters={setFilters} />
+                ) : (
+                  <div className="mt-6 flex justify-center w-full">
+                    <TrendsView property={heatmapProperty} setProperty={setHeatmapProperty} />
+                  </div>
+                )}
+              </div>
+              
+              <div className="hidden lg:block shrink-0 z-20">
+                <DailyElement onSelect={handleElementSelect} />
+              </div>
             </div>
-            
-            <div className="hidden lg:block shrink-0 z-20">
-              <DailyElement onSelect={handleElementSelect} />
-            </div>
-          </div>
-        )}
-
-        {/* Table/View Area */}
-        <div className="flex-1 w-full flex justify-center mt-4">
-          {viewMode === 'timeline' ? (
-            <TimelineView elements={filteredElements} onSelect={handleElementSelect} />
-          ) : (
-            <PeriodicTable 
-              elements={elements} 
-              onElementClick={handleElementSelect}
-              filteredElements={filteredElements}
-              favorites={favorites}
-              onToggleFavorite={toggleFavorite}
-              isHeatmap={viewMode === 'trends'}
-              heatmapProperty={heatmapProperty as keyof ElementData}
-            />
           )}
-        </div>
+
+          {/* Table/View Area */}
+          <div className="flex-1 w-full flex justify-center mt-4">
+            {viewMode === 'timeline' ? (
+              <TimelineView elements={filteredElements} onSelect={handleElementSelect} />
+            ) : (
+              <PeriodicTable 
+                elements={elements} 
+                onElementClick={handleElementSelect}
+                filteredElements={filteredElements}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                isHeatmap={viewMode === 'trends'}
+                heatmapProperty={heatmapProperty as keyof ElementData}
+              />
+            )}
+          </div>
+        </MobilePinchZoom>
       </main>
 
       <RecentHistory historyIds={recent} elements={elements} onSelect={handleElementSelect} />
